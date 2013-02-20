@@ -15,19 +15,33 @@
 namespace HareShow
 {
     using System;
+    using Quartz;
+    using Quartz.Impl;
     using Topshelf;
 
     public class HareShowService :
         ServiceControl
     {
+        private IScheduler _scheduler;
+
+        public HareShowService()
+        {
+            var schedulerFactory = new StdSchedulerFactory();
+            _scheduler = schedulerFactory.GetScheduler();
+        }
+
         public bool Start(HostControl hostControl)
         {
-            throw new NotImplementedException();
+            _scheduler.Start();
+
+            return true;
         }
 
         public bool Stop(HostControl hostControl)
         {
-            throw new NotImplementedException();
+            _scheduler.Shutdown();
+
+            return true;
         }
     }
 }

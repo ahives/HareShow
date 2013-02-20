@@ -14,12 +14,13 @@
 
 namespace HareShow
 {
+    using Autofac;
     using Topshelf;
     using Topshelf.Runtime;
 
     internal class Program
     {
-        private static int Main(string[] args)
+        private static int Main()
         {
             return (int) HostFactory.Run(x =>
                                              {
@@ -31,9 +32,13 @@ namespace HareShow
                                              });
         }
 
-        private static ServiceControl CreateHareShowService(HostSettings arg)
+        private static ServiceControl CreateHareShowService(HostSettings hostSettings)
         {
-            throw new System.NotImplementedException();
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder.RegisterInstance(hostSettings);
+            var container = containerBuilder.Build();
+
+            return container.Resolve<HareShowService>();
         }
     }
 }
