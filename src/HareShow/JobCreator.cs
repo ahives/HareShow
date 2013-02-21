@@ -17,15 +17,17 @@ namespace HareShow
     using System;
     using Quartz;
 
-    public class JobCreator
+    public static class JobCreator
     {
-        public static void Create<T>(IScheduler scheduler, Guid jobId, DateTimeOffset startTime, TimeSpan interval)
+        public static void Create<T>(IScheduler scheduler, Guid jobId, DateTimeOffset startTime, TimeSpan interval, string username, string password)
             where T : IJob
         {
             IJobDetail jobDetail = JobBuilder.Create<T>()
                                              .WithIdentity(jobId.ToString("N"))
                                              .StoreDurably(true)
                                              .RequestRecovery(true)
+                                             .UsingJobData("username", username)
+                                             .UsingJobData("password", password)
                                              .Build();
             ITrigger trigger = TriggerBuilder.Create()
                                              .WithIdentity(jobId.ToString("N"))

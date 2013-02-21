@@ -24,8 +24,8 @@ namespace HareShow
         {
             return (int) HostFactory.Run(x =>
                                              {
-                                                 x.SetServiceName("");
-                                                 x.SetDisplayName("");
+                                                 x.SetServiceName("HareShow");
+                                                 x.SetDisplayName("HareShow");
                                                  x.SetDescription("");
                                                  x.UseLog4Net("log4net.config");
                                                  x.Service(CreateHareShowService);
@@ -36,6 +36,7 @@ namespace HareShow
         {
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterInstance(hostSettings);
+            containerBuilder.RegisterType<HareShowService>();
             var container = containerBuilder.Build();
 
             return container.Resolve<HareShowService>();

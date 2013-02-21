@@ -22,16 +22,37 @@ namespace HareShow
     public class HareShowService :
         ServiceControl
     {
-        private IScheduler _scheduler;
+        private readonly IScheduler _scheduler;
 
         public HareShowService()
         {
-            var schedulerFactory = new StdSchedulerFactory();
-            _scheduler = schedulerFactory.GetScheduler();
+            _scheduler = CreateScheduler();
         }
 
         public bool Start(HostControl hostControl)
         {
+            // TODO: get start datetime from app.config
+            string startDateTimeString = "20130221";
+
+            DateTime startDateTime;
+            if (!DateTime.TryParse(startDateTimeString, out startDateTime))
+            {
+                // TODO: if the start datetime is bad then throw an exception here
+            }
+
+            // TODO: get interval from app.config
+            string intervalString = "00:00:30";
+            TimeSpan interval;
+            if (!TimeSpan.TryParse(intervalString, out interval))
+            {
+                // TODO: if the interval time is bad then throw an exception here
+            }
+
+            // TODO: get username and password from app.config
+            string username = "guest";
+            string password = "guest";
+            JobCreator.Create<HareShowStatsJob>(_scheduler, Guid.NewGuid(), new DateTimeOffset(startDateTime), interval,
+                                                username, password);
             _scheduler.Start();
 
             return true;
@@ -42,6 +63,13 @@ namespace HareShow
             _scheduler.Shutdown();
 
             return true;
+        }
+
+        private IScheduler CreateScheduler()
+        {
+            var schedulerFactory = new StdSchedulerFactory();
+            var scheduler = schedulerFactory.GetScheduler();
+            return scheduler;
         }
     }
 }
