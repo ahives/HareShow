@@ -15,18 +15,26 @@
 namespace HareShow
 {
     using System;
+    using Contracts;
+    using HareDu;
     using Quartz;
     using Quartz.Impl;
     using Topshelf;
 
-    public class HareShowService :
+    public class QueueMonitorService :
         ServiceControl
     {
+        private readonly HareDuClient _client;
         private readonly IScheduler _scheduler;
 
-        public HareShowService()
+        public QueueMonitorService()
         {
             _scheduler = CreateScheduler();
+            _client = HareDuFactory.New(x =>
+                                            {
+                                                x.ConnectTo("http://localhost:15672");
+                                                x.EnableLogging("HareDuLogger");
+                                            });
         }
 
         public bool Start(HostControl hostControl)
@@ -41,7 +49,7 @@ namespace HareShow
             }
 
             // TODO: get interval from app.config
-            string intervalString = "00:00:30";
+            string intervalString = "00:00:10";
             TimeSpan interval;
             if (!TimeSpan.TryParse(intervalString, out interval))
             {
@@ -51,8 +59,11 @@ namespace HareShow
             // TODO: get username and password from app.config
             string username = "guest";
             string password = "guest";
-            JobCreator.Create<HareShowStatsJob>(_scheduler, Guid.NewGuid(), new DateTimeOffset(startDateTime), interval,
+            JobCreator.Create<QueueMonitorJob>(_scheduler, Guid.NewGuid(), new DateTimeOffset(startDateTime), interval,
                                                 username, password);
+
+            var queueMonitor = new QueueMonitor(_client);
+            _scheduler.JobFactory = new HareShowJobFactory<IQueueMonitor>(queueMonitor);
             _scheduler.Start();
 
             return true;

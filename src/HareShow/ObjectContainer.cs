@@ -14,27 +14,24 @@
 
 namespace HareShow
 {
-    using HareDu;
+    using Autofac;
+    using Contracts;
+    using Topshelf.Runtime;
 
-    public static class HareDuGlobal
+    public class ObjectContainer :
+        IObjectContainer
     {
-        private static HareDuClient _client;
-
-        public static HareDuClient Client
+        public ObjectContainer(HostSettings hostSettings)
         {
-            get
-            {
-                if (_client.IsNull())
-                {
-                    _client = HareDuFactory.New(x =>
-                                                    {
-                                                        x.ConnectTo("http://localhost:15672");
-                                                        x.EnableLogging("HareDuLogger");
-                                                    });
-                }
+            var containerBuilder = new ContainerBuilder();
 
-                return _client;
-            }
+            containerBuilder.RegisterInstance(hostSettings);
+            containerBuilder.RegisterType<QueueMonitorService>();
+            containerBuilder.RegisterInstance<IObjectContainer>(this);
+
+            Container = containerBuilder.Build();
         }
+
+        public IContainer Container { get; private set; }
     }
 }

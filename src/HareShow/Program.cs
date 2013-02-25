@@ -34,12 +34,9 @@ namespace HareShow
 
         private static ServiceControl CreateHareShowService(HostSettings hostSettings)
         {
-            var containerBuilder = new ContainerBuilder();
-            containerBuilder.RegisterInstance(hostSettings);
-            containerBuilder.RegisterType<HareShowService>();
-            var container = containerBuilder.Build();
+            var container = new ObjectContainer(hostSettings);
 
-            return container.Resolve<HareShowService>();
+            return container.Container.Resolve<QueueMonitorService>();
         }
     }
 }

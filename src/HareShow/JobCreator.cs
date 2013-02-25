@@ -19,16 +19,19 @@ namespace HareShow
 
     public static class JobCreator
     {
-        public static void Create<T>(IScheduler scheduler, Guid jobId, DateTimeOffset startTime, TimeSpan interval, string username, string password)
+        public static void Create<T>(IScheduler scheduler, Guid jobId, DateTimeOffset startTime, TimeSpan interval,
+                                     string username, string password)
             where T : IJob
         {
-            IJobDetail jobDetail = JobBuilder.Create<T>()
-                                             .WithIdentity(jobId.ToString("N"))
-                                             .StoreDurably(true)
-                                             .RequestRecovery(true)
-                                             .UsingJobData("username", username)
-                                             .UsingJobData("password", password)
-                                             .Build();
+            IJobDetail jobDetail = CreateJobDetail<T>(jobId, username, password);
+            ITrigger trigger = CreateJobTrigger(jobId, jobDetail, startTime, interval);
+
+            scheduler.ScheduleJob(jobDetail, trigger);
+        }
+
+        private static ITrigger CreateJobTrigger(Guid jobId, IJobDetail jobDetail, DateTimeOffset startTime,
+                                                 TimeSpan interval)
+        {
             ITrigger trigger = TriggerBuilder.Create()
                                              .WithIdentity(jobId.ToString("N"))
                                              .ForJob(jobDetail)
@@ -40,7 +43,21 @@ namespace HareShow
                                                                      })
                                              .Build();
 
-            scheduler.ScheduleJob(jobDetail, trigger);
+            return trigger;
+        }
+
+        private static IJobDetail CreateJobDetail<T>(Guid jobId, string username, string password)
+            where T : IJob
+        {
+            IJobDetail jobDetail = JobBuilder.Create<T>()
+                                             .WithIdentity(jobId.ToString("N"))
+                                             .StoreDurably(true)
+                                             .RequestRecovery(true)
+                                             .UsingJobData("username", username)
+                                             .UsingJobData("password", password)
+                                             .Build();
+
+            return jobDetail;
         }
     }
 }
