@@ -14,6 +14,8 @@
 
 namespace HareShow.Contracts
 {
+    using Model;
+
     public interface IQueueMonitor :
         IMonitor
     {

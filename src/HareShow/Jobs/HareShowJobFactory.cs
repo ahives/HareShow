@@ -56,7 +56,7 @@ namespace HareShow.Jobs
         private Func<TMonitor, TSecurity, IJob> CreateConstructor()
         {
             Type type = typeof (QueueMonitorJob);
-            ConstructorInfo ctor = type.GetConstructor(new[] {typeof (TMonitor)});
+            ConstructorInfo ctor = type.GetConstructor(new[] { typeof(TMonitor), typeof(TSecurity) });
             Func<TMonitor, TSecurity, IJob> job = CreateJob(ctor);
 
             return job;
@@ -65,7 +65,7 @@ namespace HareShow.Jobs
         private Func<TMonitor, TSecurity, IJob> CreateJob(ConstructorInfo ctor)
         {
             ParameterExpression monitorParam = Expression.Parameter(typeof (TMonitor), "monitor");
-            ParameterExpression securityParam = Expression.Parameter(typeof (TMonitor), "security");
+            ParameterExpression securityParam = Expression.Parameter(typeof(TSecurity), "security");
             NewExpression obj = Expression.New(ctor, monitorParam, securityParam);
 
             return Expression.Lambda<Func<TMonitor, TSecurity, IJob>>(obj, monitorParam, securityParam).Compile();

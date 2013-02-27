@@ -15,6 +15,8 @@
 namespace HareShow
 {
     using Autofac;
+    using Core;
+    using Services;
     using Topshelf;
     using Topshelf.Runtime;
 
