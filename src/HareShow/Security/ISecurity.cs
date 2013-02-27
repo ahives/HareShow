@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace HareShow.Contracts
+namespace HareShow.Security
 {
-    public interface IMonitor
+    public interface ISecurity
     {
+        string Decrypt(string password);
+        string Encrypt(string password);
     }
 }

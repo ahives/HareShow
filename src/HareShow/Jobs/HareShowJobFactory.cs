@@ -1,4 +1,4 @@
-﻿// Copyright 2013-2014 Albert L. Hives
+// Copyright 2013-2014 Albert L. Hives
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace HareShow
+namespace HareShow.Jobs
 {
     using System;
     using System.Linq.Expressions;
@@ -20,17 +20,21 @@ namespace HareShow
     using Contracts;
     using Quartz;
     using Quartz.Spi;
+    using Security;
 
-    public class HareShowJobFactory<T> :
+    public class HareShowJobFactory<TMonitor, TSecurity> :
         IJobFactory
-        where T : IMonitor
+        where TMonitor : IMonitor
+        where TSecurity : ISecurity
     {
-        private readonly Func<T, IJob> _jobFactory;
-        private readonly T _monitor;
+        private readonly Func<TMonitor, TSecurity, IJob> _jobFactory;
+        private readonly TMonitor _monitor;
+        private readonly TSecurity _security;
 
-        public HareShowJobFactory(T monitor)
+        public HareShowJobFactory(TMonitor monitor, TSecurity security)
         {
             _monitor = monitor;
+            _security = security;
             _jobFactory = CreateConstructor();
         }
 
@@ -40,7 +44,7 @@ namespace HareShow
             if (jobDetail == null)
                 throw new SchedulerException("");
 
-            IJob job = _jobFactory(_monitor);
+            IJob job = _jobFactory(_monitor, _security);
 
             return job;
         }
@@ -49,21 +53,22 @@ namespace HareShow
         {
         }
 
-        private Func<T, IJob> CreateConstructor()
+        private Func<TMonitor, TSecurity, IJob> CreateConstructor()
         {
             Type type = typeof (QueueMonitorJob);
-            ConstructorInfo ctor = type.GetConstructor(new[] {typeof (T)});
-            Func<T, IJob> job = CreateJob(ctor);
+            ConstructorInfo ctor = type.GetConstructor(new[] {typeof (TMonitor)});
+            Func<TMonitor, TSecurity, IJob> job = CreateJob(ctor);
 
             return job;
         }
 
-        private Func<T, IJob> CreateJob(ConstructorInfo ctor)
+        private Func<TMonitor, TSecurity, IJob> CreateJob(ConstructorInfo ctor)
         {
-            ParameterExpression monitor = Expression.Parameter(typeof (T), "monitor");
-            NewExpression obj = Expression.New(ctor, monitor);
+            ParameterExpression monitorParam = Expression.Parameter(typeof (TMonitor), "monitor");
+            ParameterExpression securityParam = Expression.Parameter(typeof (TMonitor), "security");
+            NewExpression obj = Expression.New(ctor, monitorParam, securityParam);
 
-            return Expression.Lambda<Func<T, IJob>>(obj, monitor).Compile();
+            return Expression.Lambda<Func<TMonitor, TSecurity, IJob>>(obj, monitorParam, securityParam).Compile();
         }
     }
 }

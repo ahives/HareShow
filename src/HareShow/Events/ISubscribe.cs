@@ -12,9 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace HareShow.Contracts
+namespace HareShow.Events
 {
-    public interface IMonitor
+    using System;
+
+    public interface ISubscribe
     {
+        ISubscribe Subscribe<TEvent>(Action<TEvent> @event)
+            where TEvent : IEvent;
     }
 }

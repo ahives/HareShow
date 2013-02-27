@@ -12,9 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace HareShow.Contracts
+namespace HareShow.Security
 {
-    public interface IMonitor
+    using System;
+
+    internal class SecurityImpl :
+        ISecurity
     {
+        public string Decrypt(string password)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string Encrypt(string password)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

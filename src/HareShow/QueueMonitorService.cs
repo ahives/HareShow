@@ -17,8 +17,10 @@ namespace HareShow
     using System;
     using Contracts;
     using HareDu;
+    using Jobs;
     using Quartz;
     using Quartz.Impl;
+    using Security;
     using Topshelf;
 
     public class QueueMonitorService :
@@ -60,10 +62,11 @@ namespace HareShow
             string username = "guest";
             string password = "guest";
             JobCreator.Create<QueueMonitorJob>(_scheduler, Guid.NewGuid(), new DateTimeOffset(startDateTime), interval,
-                                                username, password);
+                                               username, password);
 
             var queueMonitor = new QueueMonitor(_client);
-            _scheduler.JobFactory = new HareShowJobFactory<IQueueMonitor>(queueMonitor);
+            var security = new SecurityImpl();
+            _scheduler.JobFactory = new HareShowJobFactory<IQueueMonitor, ISecurity>(queueMonitor, security);
             _scheduler.Start();
 
             return true;
