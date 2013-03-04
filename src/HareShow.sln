@@ -10,6 +10,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{D38037
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HareShow.QueueService", "HareShow.QueueService\HareShow.QueueService.csproj", "{CE5CFE0D-922D-470F-B069-926D0434A72D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HareShow.ChannelService", "HareShow.ChannelService\HareShow.ChannelService.csproj", "{72604E08-0040-41B0-A0B9-F822C2C1754C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -20,6 +24,14 @@ Global
 		{9989B853-F844-4E5B-BBC2-854C75ABCAC4}.Debug|x86.Build.0 = Debug|x86
 		{9989B853-F844-4E5B-BBC2-854C75ABCAC4}.Release|x86.ActiveCfg = Release|x86
 		{9989B853-F844-4E5B-BBC2-854C75ABCAC4}.Release|x86.Build.0 = Release|x86
+		{CE5CFE0D-922D-470F-B069-926D0434A72D}.Debug|x86.ActiveCfg = Debug|x86
+		{CE5CFE0D-922D-470F-B069-926D0434A72D}.Debug|x86.Build.0 = Debug|x86
+		{CE5CFE0D-922D-470F-B069-926D0434A72D}.Release|x86.ActiveCfg = Release|x86
+		{CE5CFE0D-922D-470F-B069-926D0434A72D}.Release|x86.Build.0 = Release|x86
+		{72604E08-0040-41B0-A0B9-F822C2C1754C}.Debug|x86.ActiveCfg = Debug|x86
+		{72604E08-0040-41B0-A0B9-F822C2C1754C}.Debug|x86.Build.0 = Debug|x86
+		{72604E08-0040-41B0-A0B9-F822C2C1754C}.Release|x86.ActiveCfg = Release|x86
+		{72604E08-0040-41B0-A0B9-F822C2C1754C}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

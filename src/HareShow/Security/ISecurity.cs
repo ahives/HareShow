@@ -16,7 +16,7 @@ namespace HareShow.Security
 {
     public interface ISecurity
     {
-        string Decrypt(string password);
-        string Encrypt(string password);
+        string Decrypt(string @string);
+        string Encrypt(string @string);
     }
 }

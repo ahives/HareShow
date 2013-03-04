@@ -15,12 +15,10 @@
 namespace HareShow.Monitors
 {
     using AutoMapper;
-    using Contracts;
     using HareDu;
     using HareDu.Model;
     using HareDu.Resources;
     using Model;
-    using MongoDB.Driver;
 
     public class QueueMonitor :
         IQueueMonitor
@@ -32,30 +30,20 @@ namespace HareShow.Monitors
 
         private HareDuClient Client { get; set; }
 
-        public Stats Get(string username, string password)
+        public QueueStats Get(string username, string password)
         {
             var overview = Client
                 .Factory<OverviewResources>(x => x.Credentials(username, password))
                 .Get()
                 .Data();
-            var mapping = Mapper.CreateMap<Overview, Stats>()
-                                .ForMember(x => x.Node, x => x.MapFrom(y => y.Node))
-                                .ForMember(x => x.MessageStats, x => x.MapFrom(y => y.MessageStats))
-                                .ForMember(x => x.QueueTotals, x => x.MapFrom(y => y.QueueTotals))
-                                .ForMember(x => x.Listeners, x => x.MapFrom(y => y.Listeners));
-            var heartbeat = Mapper.Map<Overview, Stats>(overview);
+            var mapping = Mapper.CreateMap<Overview, QueueStats>()
+                                .ForMember(x => x.Messages, x => x.MapFrom(y => y.QueueTotals.Messages))
+                                .ForMember(x => x.MessagesReady, x => x.MapFrom(y => y.QueueTotals.MessagesReady))
+                                .ForMember(x => x.MessagesUnacknowledged,
+                                           x => x.MapFrom(y => y.QueueTotals.MessagesUnacknowledged));
+            var queueStats = Mapper.Map<Overview, QueueStats>(overview);
 
-            return heartbeat;
-        }
-
-        public void Save(Stats stats)
-        {
-            string connectionString = "";
-            var client = new MongoClient(connectionString);
-            var server = client.GetServer();
-            var database = server.GetDatabase("");
-            var collection = database.GetCollection<Stats>("");
-            collection.Save(stats);
+            return queueStats;
         }
     }
 }

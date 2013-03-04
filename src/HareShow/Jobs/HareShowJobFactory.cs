@@ -17,17 +17,18 @@ namespace HareShow.Jobs
     using System;
     using System.Linq.Expressions;
     using System.Reflection;
-    using Contracts;
+    using Monitors;
     using Quartz;
     using Quartz.Spi;
     using Security;
 
-    public class HareShowJobFactory<TMonitor, TSecurity> :
+    public class HareShowJobFactory<TMonitor, TSecurity, TJob> :
         IJobFactory
         where TMonitor : IMonitor
         where TSecurity : ISecurity
+        where TJob : IJob
     {
-        private readonly Func<TMonitor, TSecurity, IJob> _jobFactory;
+        private readonly Func<TMonitor, TSecurity, TJob> _jobFactory;
         private readonly TMonitor _monitor;
         private readonly TSecurity _security;
 
@@ -44,7 +45,7 @@ namespace HareShow.Jobs
             if (jobDetail == null)
                 throw new SchedulerException("");
 
-            IJob job = _jobFactory(_monitor, _security);
+            TJob job = _jobFactory(_monitor, _security);
 
             return job;
         }
@@ -53,22 +54,22 @@ namespace HareShow.Jobs
         {
         }
 
-        private Func<TMonitor, TSecurity, IJob> CreateConstructor()
+        private Func<TMonitor, TSecurity, TJob> CreateConstructor()
         {
-            Type type = typeof (QueueMonitorJob);
-            ConstructorInfo ctor = type.GetConstructor(new[] { typeof(TMonitor), typeof(TSecurity) });
-            Func<TMonitor, TSecurity, IJob> job = CreateJob(ctor);
+            Type type = typeof(TJob);
+            ConstructorInfo ctor = type.GetConstructor(new[] {typeof (TMonitor), typeof (TSecurity)});
+            Func<TMonitor, TSecurity, TJob> job = CreateJob(ctor);
 
             return job;
         }
 
-        private Func<TMonitor, TSecurity, IJob> CreateJob(ConstructorInfo ctor)
+        private Func<TMonitor, TSecurity, TJob> CreateJob(ConstructorInfo ctor)
         {
             ParameterExpression monitorParam = Expression.Parameter(typeof (TMonitor), "monitor");
-            ParameterExpression securityParam = Expression.Parameter(typeof(TSecurity), "security");
+            ParameterExpression securityParam = Expression.Parameter(typeof (TSecurity), "security");
             NewExpression obj = Expression.New(ctor, monitorParam, securityParam);
 
-            return Expression.Lambda<Func<TMonitor, TSecurity, IJob>>(obj, monitorParam, securityParam).Compile();
+            return Expression.Lambda<Func<TMonitor, TSecurity, TJob>>(obj, monitorParam, securityParam).Compile();
         }
     }
 }

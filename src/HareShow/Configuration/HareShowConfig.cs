@@ -12,24 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace HareShow.Events
+namespace HareShow.Configuration
 {
-    using System;
+    using System.Collections.Specialized;
+    using System.Configuration;
 
-    public class EventProxy :
-        IPublish,
-        ISubscribe
+    public class HareShowConfig :
+        IHareShowConfig
     {
-        public IPublish Publish<TEvent>(Action<TEvent> @event)
-            where TEvent : IEvent
+        protected NameValueCollection Section { get; set; }
+
+        public string Get(string key)
         {
-            throw new NotImplementedException();
+            return Section.Get(key);
         }
 
-        public ISubscribe Subscribe<TEvent>(Action<TEvent> @event)
-            where TEvent : IEvent
+        public void Set(string key, string value)
         {
-            throw new NotImplementedException();
+            Section.Set(key, value);
+        }
+
+        public IHareShowConfig GetConfigSection(string sectionName)
+        {
+            Section = ConfigurationManager.GetSection(sectionName) as NameValueCollection;
+            return this;
         }
     }
 }

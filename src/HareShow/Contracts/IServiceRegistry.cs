@@ -14,7 +14,10 @@
 
 namespace HareShow.Contracts
 {
-    public interface IMonitor
+    using Autofac;
+
+    public interface IServiceRegistry
     {
+        IContainer Container { get; }
     }
 }

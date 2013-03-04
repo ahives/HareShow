@@ -12,27 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace HareShow.Core
+namespace HareShow.Exceptions
 {
-    using Autofac;
-    using Contracts;
-    using Services;
-    using Topshelf.Runtime;
+    using System;
 
-    public class ObjectContainer :
-        IObjectContainer
+    public class UserCredentialsInvalidException :
+        Exception
     {
-        public ObjectContainer(HostSettings hostSettings)
+        public UserCredentialsInvalidException(string message) :
+            base(message)
         {
-            var containerBuilder = new ContainerBuilder();
-
-            containerBuilder.RegisterInstance(hostSettings);
-            containerBuilder.RegisterType<QueueMonitorService>();
-            containerBuilder.RegisterInstance<IObjectContainer>(this);
-
-            Container = containerBuilder.Build();
         }
-
-        public IContainer Container { get; private set; }
     }
 }

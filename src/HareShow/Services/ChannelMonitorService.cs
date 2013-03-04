@@ -25,14 +25,14 @@ namespace HareShow.Services
     using Security;
     using Topshelf;
 
-    public class QueueMonitorService :
+    public class ChannelMonitorService :
         ServiceControl
     {
         private readonly HareDuClient _client;
         private readonly IScheduler _scheduler;
         private HareShowConfig _config;
 
-        public QueueMonitorService()
+        public ChannelMonitorService()
         {
             _scheduler = HareDuScheduler.CreateScheduler();
             _config = new HareShowConfig();
@@ -78,16 +78,15 @@ namespace HareShow.Services
 
             if (string.IsNullOrWhiteSpace(hareDuCredentials.Get("username")) ||
                 string.IsNullOrWhiteSpace(hareDuCredentials.Get("password")))
-                throw new UserCredentialsInvalidException(
-                    "Not able to connect to RabbitMQ because username or password is invalid.");
+                throw new UserCredentialsInvalidException("Not able to connect to RabbitMQ because username or password is invalid.");
 
             string username = hareDuCredentials.Get("username");
             string password = hareDuCredentials.Get("password");
 
-            _scheduler.Schedule<QueueMonitorJob>(Guid.NewGuid(), new DateTimeOffset(startDateTime), interval, username, password);
-            var monitor = new QueueMonitor(_client);
+            _scheduler.Schedule<ChannelMonitorJob>(Guid.NewGuid(), new DateTimeOffset(startDateTime), interval, username, password);
+            var monitor = new ChannelMonitor(_client);
             var security = new SecurityImpl();
-            _scheduler.JobFactory = new HareShowJobFactory<IQueueMonitor, ISecurity, QueueMonitorJob>(monitor, security);
+            _scheduler.JobFactory = new HareShowJobFactory<IChannelMonitor, ISecurity, ChannelMonitorJob>(monitor, security);
             _scheduler.Start();
 
             return true;

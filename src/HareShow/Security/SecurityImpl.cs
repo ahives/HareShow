@@ -14,19 +14,17 @@
 
 namespace HareShow.Security
 {
-    using System;
-
     internal class SecurityImpl :
         ISecurity
     {
-        public string Decrypt(string password)
+        public string Decrypt(string @string)
         {
-            throw new NotImplementedException();
+            return @string;
         }
 
-        public string Encrypt(string password)
+        public string Encrypt(string @string)
         {
-            throw new NotImplementedException();
+            return @string;
         }
     }
 }

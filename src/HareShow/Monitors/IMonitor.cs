@@ -12,24 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace HareShow.Events
+namespace HareShow.Monitors
 {
-    using System;
-
-    public class EventProxy :
-        IPublish,
-        ISubscribe
+    public interface IMonitor
     {
-        public IPublish Publish<TEvent>(Action<TEvent> @event)
-            where TEvent : IEvent
-        {
-            throw new NotImplementedException();
-        }
-
-        public ISubscribe Subscribe<TEvent>(Action<TEvent> @event)
-            where TEvent : IEvent
-        {
-            throw new NotImplementedException();
-        }
     }
 }

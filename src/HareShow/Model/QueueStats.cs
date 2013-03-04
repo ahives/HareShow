@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace HareShow.Contracts
+namespace HareShow.Model
 {
-    using Model;
-
-    public interface IQueueMonitor :
-        IMonitor
+    public class QueueStats
     {
-        Stats Get(string username, string password);
-        void Save(Stats stats);
+        public long Messages { get; set; }
+
+        public long MessagesReady { get; set; }
+
+        public long MessagesUnacknowledged { get; set; }
     }
 }

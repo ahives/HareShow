@@ -1,4 +1,4 @@
-// Copyright 2013-2014 Albert L. Hives
+﻿// Copyright 2013-2014 Albert L. Hives
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,22 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace HareShow.Events
+namespace HareShow
 {
     using System;
+    using System.Reactive.Subjects;
 
-    public class EventProxy :
-        IPublish,
-        ISubscribe
+    public class EventProxySubject<T> :
+        ISubject<T>
     {
-        public IPublish Publish<TEvent>(Action<TEvent> @event)
-            where TEvent : IEvent
+        public void OnNext(T value)
         {
             throw new NotImplementedException();
         }
 
-        public ISubscribe Subscribe<TEvent>(Action<TEvent> @event)
-            where TEvent : IEvent
+        public void OnError(Exception error)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnCompleted()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IDisposable Subscribe(IObserver<T> observer)
         {
             throw new NotImplementedException();
         }

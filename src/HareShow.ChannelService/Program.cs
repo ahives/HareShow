@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace HareShow
+namespace HareShow.ChannelService
 {
     using Autofac;
     using Core;
@@ -36,9 +36,9 @@ namespace HareShow
 
         private static ServiceControl CreateHareShowService(HostSettings hostSettings)
         {
-            var container = new ObjectContainer(hostSettings);
+            var container = new ServiceRegistry(hostSettings);
 
-            return container.Container.Resolve<QueueMonitorService>();
+            return container.Container.Resolve<ChannelMonitorService>();
         }
     }
 }

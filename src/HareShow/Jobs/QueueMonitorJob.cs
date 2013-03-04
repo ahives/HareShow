@@ -15,7 +15,7 @@
 namespace HareShow.Jobs
 {
     using System;
-    using Contracts;
+    using Monitors;
     using Quartz;
     using Security;
 
@@ -33,24 +33,24 @@ namespace HareShow.Jobs
 
         public void Execute(IJobExecutionContext context)
         {
-            string username = context.JobDetail.JobDataMap.GetString("username");
-            string password = context.JobDetail.JobDataMap.GetString("password");
+            string username = _security.Decrypt(context.JobDetail.JobDataMap.GetString("username"));
+            string password = _security.Decrypt(context.JobDetail.JobDataMap.GetString("password"));
 
             var stats = _queueMonitor.Get(username, password);
-            //Console.WriteLine("[{0}] Queue monitor fired.", context.FireTimeUtc.Value.ToString("MM/dd/yyyy hh:mm:ss"));
-            Console.WriteLine("Messages: {0}", stats.QueueTotals.Messages);
-            Console.WriteLine("Messages Ready: {0}", stats.QueueTotals.MessagesReady);
-            Console.WriteLine("Messages Unacknowledged: {0}", stats.QueueTotals.MessagesUnacknowledged);
-            Console.WriteLine("Rate: {0}", stats.QueueTotals.MessagesDetails.Rate);
-            Console.WriteLine("Interval: {0}", stats.QueueTotals.MessagesDetails.Interval);
-            Console.WriteLine("Last Event: {0}", stats.QueueTotals.MessagesDetails.LastEvent);
-            Console.WriteLine("Rate: {0}", stats.QueueTotals.MessagesReadyDetails.Rate);
-            Console.WriteLine("Interval: {0}", stats.QueueTotals.MessagesReadyDetails.Interval);
-            Console.WriteLine("Last Event: {0}", stats.QueueTotals.MessagesReadyDetails.LastEvent);
-            Console.WriteLine("Rate: {0}", stats.QueueTotals.MessagesUnacknowledgedDetails.Rate);
-            Console.WriteLine("Interval: {0}", stats.QueueTotals.MessagesUnacknowledgedDetails.Interval);
-            Console.WriteLine("Last Event: {0}", stats.QueueTotals.MessagesUnacknowledgedDetails.LastEvent);
-            Console.WriteLine("****************************************");
+            Console.WriteLine("[{0}] Queue monitor fired.", context.FireTimeUtc.Value.ToString("MM/dd/yyyy hh:mm:ss"));
+            //Console.WriteLine("Messages: {0}", stats.Messages);
+            //Console.WriteLine("Messages Ready: {0}", stats.MessagesReady);
+            //Console.WriteLine("Messages Unacknowledged: {0}", stats.MessagesUnacknowledged);
+            //Console.WriteLine("Rate: {0}", stats.QueueTotals.MessagesDetails.Rate);
+            //Console.WriteLine("Interval: {0}", stats.QueueTotals.MessagesDetails.Interval);
+            //Console.WriteLine("Last Event: {0}", stats.QueueTotals.MessagesDetails.LastEvent);
+            //Console.WriteLine("Rate: {0}", stats.QueueTotals.MessagesReadyDetails.Rate);
+            //Console.WriteLine("Interval: {0}", stats.QueueTotals.MessagesReadyDetails.Interval);
+            //Console.WriteLine("Last Event: {0}", stats.QueueTotals.MessagesReadyDetails.LastEvent);
+            //Console.WriteLine("Rate: {0}", stats.QueueTotals.MessagesUnacknowledgedDetails.Rate);
+            //Console.WriteLine("Interval: {0}", stats.QueueTotals.MessagesUnacknowledgedDetails.Interval);
+            //Console.WriteLine("Last Event: {0}", stats.QueueTotals.MessagesUnacknowledgedDetails.LastEvent);
+            //Console.WriteLine("****************************************");
 
             //_queueMonitor.Save(heartbeat);
         }

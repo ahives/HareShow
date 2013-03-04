@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace HareShow.Jobs
+namespace HareShow.Extensions
 {
     using System;
     using Quartz;
 
-    public static class JobCreator
+    public static class JobSchedulerExtensions
     {
-        public static void Create<T>(IScheduler scheduler, Guid jobId, DateTimeOffset startTime, TimeSpan interval,
-                                     string username, string password)
+        public static void Schedule<T>(this IScheduler scheduler, Guid jobId, DateTimeOffset startTime,
+                                       TimeSpan interval, string username, string password)
             where T : IJob
         {
             IJobDetail jobDetail = CreateJobDetail<T>(jobId, username, password);

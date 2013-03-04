@@ -1,4 +1,4 @@
-// Copyright 2013-2014 Albert L. Hives
+﻿// Copyright 2013-2014 Albert L. Hives
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,24 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace HareShow.Events
+namespace HareShow
 {
-    using System;
+    using Quartz;
+    using Quartz.Impl;
 
-    public class EventProxy :
-        IPublish,
-        ISubscribe
+    public class HareDuScheduler
     {
-        public IPublish Publish<TEvent>(Action<TEvent> @event)
-            where TEvent : IEvent
+        public static IScheduler CreateScheduler()
         {
-            throw new NotImplementedException();
-        }
-
-        public ISubscribe Subscribe<TEvent>(Action<TEvent> @event)
-            where TEvent : IEvent
-        {
-            throw new NotImplementedException();
+            var schedulerFactory = new StdSchedulerFactory();
+            var scheduler = schedulerFactory.GetScheduler();
+            return scheduler;
         }
     }
 }

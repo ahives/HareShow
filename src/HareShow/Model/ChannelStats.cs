@@ -14,17 +14,21 @@
 
 namespace HareShow.Model
 {
-    using System.Collections.Generic;
-    using HareDu.Model;
+    using System;
 
-    public class Stats
+    public class ChannelStats
     {
-        public IEnumerable<MessageStats> MessageStats { get; set; }
-
-        public QueueTotals QueueTotals { get; set; }
-
-        public string Node { get; set; }
-
-        public IEnumerable<Listener> Listeners { get; set; }
+        public int ConsumerCount { get; set; }
+        public int PrefetchCount { get; set; }
+        public DateTime IdleSince { get; set; }
+        public bool Confirm { get; set; }
+        public int Published { get; set; }
+        public int Acknowledged { get; set; }
+        public int Delivered { get; set; }
+        public int DeliveredOrGet { get; set; }
+        public int Unacknowledged { get; set; }
+        public int Unconfirmed { get; set; }
+        public int Uncommitted { get; set; }
+        public int AcknowledgesUncommitted { get; set; }
     }
 }
